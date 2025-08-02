@@ -1,0 +1,103 @@
+                 ┌─────────────────────┐
+                 │      MatchService   │<<interface>>
+                 ├─────────────────────┤
+                 │ +getLiveMatches()   │
+                 │ +getMatchDetails()  │
+                 │ +updateMatchScore() │
+                 │ +addCommentary()    │
+                 └─────────▲───────────┘
+                           │
+                           │implements
+                           │
+        ┌──────────────────┴──────────────────┐
+        │      MatchServiceImpl (Subject)     │
+        ├─────────────────────────────────────┤
+        │ -matches : List<Match>              │
+        │ -observers : List<MatchObserver>    │
+        ├─────────────────────────────────────┤
+        │ +addMatch()                         │
+        │ +registerObserver()                 │
+        │ +removeObserver()                   │
+        │ +notifyObservers()                  │
+        └─────────────────────────────────────┘
+                           │notifies
+                           │
+         ┌─────────────────┴─────────────────┐
+         │         MatchObserver             │<<interface>>
+         ├───────────────────────────────────┤
+         │ +update(match : Match)            │
+         └─────────────────▲─────────────────┘
+                           │
+                           │implements
+                           │
+            ┌──────────────┴───────────────┐
+            │        UIObserver            │
+            ├──────────────────────────────┤
+            │ -name : String               │
+            ├──────────────────────────────┤
+            │ +update(match : Match)       │
+            └──────────────────────────────┘
+
+
+┌──────────────────────────┐
+│         Match            │
+├──────────────────────────┤
+│ -matchId : String        │
+│ -matchType : MatchType   │
+│ -teams : List<Team>      │
+│ -venue : String          │
+│ -status : MatchStatus    │
+│ -scorecard : Scorecard   │
+│ -commentaryList : List   │
+├──────────────────────────┤
+│ +startMatch()            │
+│ +updateScore(update)     │
+│ +addCommentary(comment)  │
+└───────────▲──────────────┘
+            │has
+            │
+ ┌──────────┴─────────┐
+ │     Scorecard      │
+ ├─────────────────────┤
+ │ -inningsList : List │
+ ├─────────────────────┤
+ │ +addInnings()       │
+ │ +getCurrentInnings()│
+ │ +updateScore()      │
+ └──────────▲──────────┘
+            │has
+            │
+   ┌────────┴─────────┐
+   │     Innings       │
+   ├───────────────────┤
+   │ -battingTeam : Team│
+   │ -runs : int        │
+   │ -wickets : int     │
+   │ -overs : float     │
+   │ -battingScores     │
+   │ -bowlingScores     │
+   └───────▲────────────┘
+           │
+ ┌─────────┴─────────┐
+ │       Team        │
+ ├────────────────────┤
+ │ -teamId : String   │
+ │ -teamName : String │
+ │ -players : List    │
+ └─────────▲──────────┘
+           │has
+           │
+        ┌──┴───────┐
+        │ Player   │
+        ├──────────┤
+        │ -playerId│
+        │ -name    │
+        │ -role    │
+        │ -batting │
+        │ -bowling │
+        └──────────┘
+
+BattingScore <---- Player (composition)
+BowlingScore <---- Player (composition)
+BallUpdate (batsman, bowler, runs, wicket, extras)
+Commentary (text, timestamp)

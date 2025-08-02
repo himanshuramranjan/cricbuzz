@@ -1,0 +1,40 @@
+App (ObserverDemo)
+        |
+        | create MatchServiceImpl
+        | register UIObserver(s)
+        |
+        v
+Create Teams & Players ---------+
+        |                       |
+        v                       |
+Create Match & Add Innings      |
+        |                       |
+        +-------> MatchServiceImpl.addMatch()
+                            |
+                            v
+                  [ Match stored in memory ]
+                            |
+        (When a ball is played - BallUpdate created)
+                            |
+                            v
+              MatchServiceImpl.updateMatchScore(matchId, update)
+                            |
+                            v
+                 Match.updateScore(update)
+                            |
+                            v
+               Scorecard.updateScore(update)
+                            |
+                +-----------+-----------+
+                |                       |
+                v                       v
+    Update Team/Player Stats       Update Overs/Wickets
+                            |
+                            v
+          MatchServiceImpl.notifyObservers(match)
+                            |
+                            v
+        All registered observers (e.g., UIObserver)
+                            |
+                            v
+        UIObserver.update(match) → Print live score
